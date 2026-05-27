@@ -209,6 +209,17 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;line-
 .sbtn.plus:active{background:#2dff6e18;}
 .score-sep{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--mut);padding-top:12px;flex-shrink:0;}
 
+/* ── SORT PILLS ── */
+.sort-pills{display:flex;gap:5px;flex-shrink:0;}
+.sort-pill{
+  padding:6px 12px;border-radius:20px;border:1.5px solid var(--bdr);
+  background:var(--surf2);color:var(--mut);font-family:'DM Sans',sans-serif;
+  font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;
+  letter-spacing:.5px;white-space:nowrap;
+}
+.sort-pill.active{background:var(--grn);border-color:var(--grn);color:#000;}
+.sort-pill:active{transform:scale(.95);}
+  
 /* ── STANDING TABLE ── */
 #tab-standing {
   background: var(--surf);
