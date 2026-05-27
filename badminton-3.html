@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Badminton Ganda</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090e0c;--surf:#101810;--surf2:#152019;--bdr:#1c2e22;
+  --grn:#2dff6e;--gdim:#1a9941;--ylw:#f0e040;--red:#ff4a4a;
+  --blu:#4ad4ff;--txt:#deeae2;--mut:#4e6e58;
+  --c1:#2dff6e;--c2:#4ad4ff;--c3:#f0a030;
+  --radius:14px;--tab-h:56px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  /* bottom nav padding */
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom));
+}
+
+/* ── GRID BG ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 31px,#fff 31px,#fff 32px),
+    repeating-linear-gradient(90deg,transparent,transparent 31px,#fff 31px,#fff 32px);}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 14px 24px;}
+
+/* ── HEADER ── */
+header{
+  padding:18px 0 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--bdr);margin-bottom:18px;
+}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{
+  width:42px;height:42px;background:var(--grn);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  flex-shrink:0;animation:pulse 3s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #2dff6e44}50%{box-shadow:0 0 0 10px #2dff6e00}}
+.logo-text{}
+.logo-sub{font-size:.6rem;letter-spacing:3px;color:var(--mut);text-transform:uppercase;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;line-height:1;color:var(--grn);}
+.badge{
+  background:#2dff6e18;border:1px solid var(--gdim);color:var(--grn);
+  font-size:.55rem;letter-spacing:2px;font-weight:700;padding:2px 8px;
+  border-radius:20px;text-transform:uppercase;margin-left:7px;
+}
+.hdate{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--mut);text-align:right;line-height:1.4;}
+
+/* ── BOTTOM NAV TABS ── */
+.tabs{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--surf);border-top:1px solid var(--bdr);
+  display:flex;z-index:100;
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;border:none;background:none;color:var(--mut);
+  font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:600;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;
+  padding:6px 2px;
+}
+.tab .ico{font-size:1.25rem;line-height:1;}
+.tab.active{color:var(--grn);}
+.tab.active .ico{filter:drop-shadow(0 0 6px #2dff6e88);}
+
+/* ── PANELS ── */
+.panel{display:none;}
+.panel.active{display:block;animation:fi .25s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION TITLE ── */
+.stitle{
+  font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:3px;color:var(--mut);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.stitle::after{content:'';flex:1;height:1px;background:var(--bdr);}
+
+/* ── COMMON INPUTS & BUTTONS ── */
+.ifield{
+  flex:1;background:var(--surf);border:1.5px solid var(--bdr);border-radius:10px;
+  padding:12px 14px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:1rem;
+  outline:none;transition:border-color .2s;min-width:0;
+}
+.ifield:focus{border-color:var(--grn);}
+.ifield::placeholder{color:var(--mut);}
+.btn{
+  padding:12px 18px;border:none;border-radius:10px;font-weight:700;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;
+  transition:all .15s;letter-spacing:.5px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.btn-g{background:var(--grn);color:#000;}
+.btn-g:active{background:#20e55a;transform:scale(.97);}
+.btn-del{background:transparent;border:1.5px solid #ff4a4a33;color:var(--red);font-size:.7rem;padding:6px 10px;border-radius:7px;}
+.btn-del:active{background:#ff4a4a22;}
+.btn-sec{background:var(--surf2);border:1.5px solid var(--bdr);color:var(--txt);}
+.btn-sec:active{border-color:var(--mut);}
+
+/* ── PLAYERS ── */
+.add-row{display:flex;gap:8px;margin-bottom:14px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;margin-bottom:20px;}
+.pchip{
+  background:var(--surf);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+}
+.pnum{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--mut);flex-shrink:0;}
+.pname{font-weight:500;font-size:.85rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── SUMMARY CARDS ── */
+.srow{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px;}
+@media(min-width:400px){.srow{grid-template-columns:repeat(4,1fr);}}
+.scard{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:12px 13px;}
+.slabel{font-size:.58rem;letter-spacing:2.5px;color:var(--mut);text-transform:uppercase;margin-bottom:4px;}
+.sval{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--grn);line-height:1;}
+.ssub{font-size:.65rem;color:var(--mut);margin-top:2px;}
+
+/* ── COURT CARDS ── */
+.cgrid{display:flex;flex-direction:column;gap:14px;}
+.ccard{background:var(--surf);border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--bdr);}
+.cheader{
+  padding:12px 16px;display:flex;align-items:center;gap:9px;
+  border-bottom:1px solid var(--bdr);
+}
+.cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.ctitle{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;}
+.cstatus{margin-left:auto;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:700;}
+.idle{background:#ffffff0a;color:var(--mut);}
+.playing{background:#2dff6e18;color:var(--grn);}
+.cbody{padding:14px;}
+
+/* team selection blocks */
+.tblock{background:var(--surf2);border-radius:10px;padding:11px 12px;margin-bottom:4px;border:1px solid var(--bdr);}
+.tbhead{display:flex;align-items:center;gap:7px;margin-bottom:9px;}
+.ttag{font-size:.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:4px;}
+.ta{background:#2dff6e18;color:var(--grn);border:1px solid #2dff6e44;}
+.tb{background:#4ad4ff18;color:var(--blu);border:1px solid #4ad4ff44;}
+.tsels{display:flex;flex-direction:column;gap:7px;}
+.psel{
+  width:100%;background:var(--surf);border:1.5px solid var(--bdr);border-radius:8px;
+  padding:11px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:.9rem;
+  outline:none;cursor:pointer;transition:border-color .2s;appearance:auto;
+}
+.psel:focus{border-color:var(--grn);}
+.vsline{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:3px;color:var(--mut);padding:5px 0;}
+.mact{display:flex;gap:8px;margin-top:13px;}
+.bcrt{
+  flex:1;padding:13px;font-size:.8rem;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;cursor:pointer;border:none;
+}
+.bstart{background:var(--grn);color:#000;}
+.bstart:active{background:#20e55a;transform:scale(.97);}
+.bfin{background:#2dff6e18;color:var(--grn);border:1.5px solid var(--gdim)!important;}
+.bfin:active{background:#2dff6e28;}
+.bcanc{background:transparent;border:1.5px solid #ff4a4a22!important;color:var(--red);}
+.bcanc:active{background:#ff4a4a11;}
+
+/* ── SCORE INPUT (playing state) ── */
+.sdisplay{background:var(--surf2);border-radius:12px;padding:16px 14px;}
+
+/* team names row */
+.steam-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:16px;}
+.snames{display:flex;flex-direction:column;gap:2px;}
+.snames.r{text-align:right;}
+.slbl2{font-size:.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:1px;}
+.spname{font-size:.82rem;font-weight:700;line-height:1.35;}
+
+/* score controls */
+.score-area{display:flex;align-items:center;justify-content:center;gap:10px;}
+.score-col{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;}
+.score-label{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mut);}
+
+/* big score input */
+.score-input{
+  width:100%;max-width:120px;
+  background:var(--surf);border:2px solid var(--bdr);border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;
+  color:var(--txt);text-align:center;outline:none;
+  padding:8px 4px;transition:border-color .2s;
+  /* hide spinner */
+  -moz-appearance:textfield;
+}
+.score-input::-webkit-inner-spin-button,
+.score-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.score-input:focus{border-color:var(--grn);}
+.score-input.clr-a{color:var(--grn);border-color:#2dff6e44;}
+.score-input.clr-b{color:var(--blu);border-color:#4ad4ff44;}
+
+/* +/- row */
+.score-btns{display:flex;gap:6px;}
+.sbtn{
+  flex:1;height:40px;border-radius:8px;border:1.5px solid var(--bdr);
+  background:var(--surf);color:var(--txt);font-size:1.2rem;
+  cursor:pointer;font-weight:700;transition:all .15s;
+}
+.sbtn:active{transform:scale(.93);}
+.sbtn.plus{border-color:var(--grn);color:var(--grn);}
+.sbtn.plus:active{background:#2dff6e18;}
+.score-sep{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--mut);padding-top:12px;flex-shrink:0;}
+
+/* ── STANDING TABLE ── */
+.swrap{overflow-x:auto;border-radius:12px;border:1.5px solid var(--bdr);-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;min-width:520px;}
+thead th{
+  background:var(--surf2);padding:11px 12px;font-size:.6rem;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--mut);text-align:left;font-weight:500;white-space:nowrap;
+}
+thead th:not(:first-child):not(:nth-child(2)){text-align:center;}
+tbody tr{border-top:1px solid var(--bdr);transition:background .15s;}
+tbody tr:active{background:var(--surf2);}
+td{padding:11px 12px;font-size:.84rem;white-space:nowrap;}
+td:not(:first-child):not(:nth-child(2)){text-align:center;}
+.rnum{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--mut);}
+.r1 .rnum{color:var(--ylw);}.r2 .rnum{color:#c0c0c0;}.r3 .rnum{color:#cd7f32;}
+.r1{background:linear-gradient(90deg,#f0e04009,transparent);}
+.ncell{display:flex;align-items:center;gap:6px;}
+.sw{color:var(--grn);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sd{color:var(--ylw);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sl{color:var(--red);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sp{color:var(--blu);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sdiff{font-family:'JetBrains Mono',monospace;font-size:.8rem;}
+.dp{color:var(--grn);}.dn{color:var(--red);}.dz{color:var(--mut);}
+.pbar{display:flex;height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-top:3px;width:60px;}
+.pfill{background:var(--grn);border-radius:2px;}
+
+/* ── HISTORY ── */
+.mlist{display:flex;flex-direction:column;gap:9px;}
+.mitem{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:12px 13px;}
+.mtop{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.midx{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--mut);width:22px;}
+.mctag{font-size:.58rem;letter-spacing:1px;padding:2px 8px;border-radius:4px;font-weight:700;text-transform:uppercase;}
+.t1{background:#2dff6e18;color:var(--c1);}.t2{background:#4ad4ff18;color:var(--c2);}.t3{background:#f0a03018;color:var(--c3);}
+.mtime{font-size:.64rem;color:var(--mut);margin-left:auto;}
+.mdel{background:none;border:none;color:var(--mut);cursor:pointer;font-size:.9rem;padding:4px 6px;border-radius:6px;}
+.mdel:active{color:var(--red);}
+.mbody{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;}
+.mteam{display:flex;flex-direction:column;gap:2px;}
+.mteam.r{text-align:right;}
+.mplayer{font-size:.8rem;font-weight:600;}
+.mscore{display:flex;align-items:center;gap:5px;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;justify-content:center;}
+.mresult{margin-top:7px;text-align:center;font-size:.65rem;}
+.wbadge{color:var(--grn);font-weight:700;letter-spacing:1px;}
+.dbadge{color:var(--ylw);font-weight:700;letter-spacing:1px;}
+
+/* ── IURAN ── */
+.fee-config{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:15px;margin-bottom:18px;}
+.fee-title{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--mut);margin-bottom:12px;font-weight:700;}
+.fee-fields{display:flex;flex-direction:column;gap:10px;}
+.fee-field{display:flex;flex-direction:column;gap:5px;}
+.fee-lbl{font-size:.62rem;letter-spacing:2px;color:var(--mut);text-transform:uppercase;}
+.fee-inp{
+  background:var(--surf2);border:1.5px solid var(--bdr);border-radius:8px;
+  padding:11px 13px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:1rem;
+  outline:none;transition:border-color .2s;width:100%;
+}
+.fee-inp:focus{border-color:var(--grn);}
+.fee-note{font-size:.64rem;color:var(--mut);margin-top:10px;line-height:1.6;
+  background:var(--surf2);padding:10px 12px;border-radius:8px;border:1px solid var(--bdr);}
+.fee-note b{color:var(--txt);}
+
+.iuran-sum{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px;}
+@media(min-width:400px){.iuran-sum{grid-template-columns:repeat(4,1fr);}}
+
+/* iuran cards (mobile-friendly list instead of table) */
+.iuran-list{display:flex;flex-direction:column;gap:9px;}
+.iuran-card{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:13px 14px;}
+.iuran-card.paid-card{border-color:var(--gdim);}
+.icard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.icard-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--mut);width:22px;flex-shrink:0;}
+.icard-name{font-weight:700;font-size:.95rem;flex:1;}
+.icard-status{
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:8px;border:1.5px solid var(--bdr);
+  background:var(--surf2);user-select:none;
+}
+.icard-status.paid{background:#2dff6e18;border-color:var(--gdim);}
+.icard-chk{
+  width:18px;height:18px;border-radius:4px;border:2px solid var(--bdr);
+  background:var(--surf);display:flex;align-items:center;justify-content:center;font-size:.7rem;
+}
+.icard-chk.on{background:var(--grn);border-color:var(--grn);color:#000;}
+.icard-slbl{font-size:.7rem;font-weight:600;}
+.icard-slbl.paid{color:var(--grn);}
+.icard-slbl.unpaid{color:var(--mut);}
+
+.icard-body{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.icard-detail{flex:1;min-width:140px;}
+.icard-rincian{font-size:.68rem;color:var(--mut);line-height:1.6;}
+.icard-total{
+  font-family:'Bebas Neue',sans-serif;font-size:1.4rem;
+  text-align:right;flex-shrink:0;
+}
+.icard-total.paid{color:var(--grn);}
+.icard-total.unpaid{color:var(--ylw);}
+
+.icard-adj{display:flex;align-items:center;gap:7px;margin-top:8px;padding-top:8px;border-top:1px solid var(--bdr);}
+.adj-lbl{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mut);flex:1;}
+.adj-controls{display:flex;align-items:center;gap:6px;}
+.adj-btn{
+  width:30px;height:30px;border-radius:7px;border:1.5px solid var(--bdr);
+  background:var(--surf2);color:var(--txt);font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+}
+.adj-btn:active{border-color:var(--grn);color:var(--grn);}
+.adj-val{font-family:'JetBrains Mono',monospace;font-size:.78rem;min-width:56px;text-align:center;}
+
+.iuran-total-card{
+  background:linear-gradient(135deg,#2dff6e14,#2dff6e06);
+  border:1.5px solid var(--gdim);border-radius:12px;
+  padding:13px 15px;margin-top:12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.itotal-label{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--grn);}
+.itotal-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--grn);}
+.itotal-sub{font-size:.64rem;color:var(--mut);margin-top:2px;text-align:right;}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:var(--mut);font-size:.84rem;}
+.eico{font-size:2rem;margin-bottom:8px;opacity:.4;}
+
+/* ── NOTIFY TOAST ── */
+#toast{
+  position:fixed;bottom:calc(var(--tab-h) + 12px + env(safe-area-inset-bottom));
+  left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--grn);color:#000;padding:10px 20px;border-radius:10px;
+  font-weight:700;font-size:.82rem;letter-spacing:.5px;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:200;white-space:nowrap;pointer-events:none;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div id="toast">✓ OK</div>
+
+<div class="page">
+
+  <!-- ═ HEADER ═ -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🏸</div>
+      <div class="logo-text">
+        <div class="logo-sub">Sistem Pertandingan</div>
+        <h1>BADMINTON<span class="badge">GANDA</span></h1>
+      </div>
+    </div>
+    <div class="hdate" id="hdate"></div>
+  </header>
+
+  <!-- ═ PEMAIN ═ -->
+  <div class="panel active" id="tab-players">
+    <div class="stitle">Tambah Pemain</div>
+    <div class="add-row">
+      <input class="ifield" id="nameIn" placeholder="Nama pemain..." maxlength="30"
+        onkeydown="if(event.key==='Enter')addP()">
+      <button class="btn btn-g" onclick="addP()">+ Add</button>
+    </div>
+    <div class="stitle">Daftar Pemain (<span id="pcnt">0</span>)</div>
+    <div id="pempty" class="empty"><div class="eico">👤</div>Belum ada pemain.</div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+
+  <!-- ═ LAPANGAN ═ -->
+  <div class="panel" id="tab-courts">
+    <div class="srow" id="sumA"></div>
+    <div class="stitle">Lapangan — Ganda 2v2</div>
+    <div class="cgrid" id="cgrid"></div>
+  </div>
+
+  <!-- ═ KLASEMEN ═ -->
+  <div class="panel" id="tab-standing">
+    <div class="srow" id="sumB"></div>
+    <div class="stitle">Klasemen Pemain</div>
+    <div class="swrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Pemain</th><th>Main</th>
+          <th>M</th><th>S</th><th>K</th>
+          <th>P+</th><th>P−</th><th>Selisih</th><th>Nilai</th>
+        </tr></thead>
+        <tbody id="stbody"></tbody>
+      </table>
+    </div>
+    <div id="stempty" class="empty" style="display:none">
+      <div class="eico">🏆</div>Belum ada pertandingan selesai.
+    </div>
+  </div>
+
+  <!-- ═ RIWAYAT ═ -->
+  <div class="panel" id="tab-history">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;">
+      <div class="stitle" style="margin:0;flex:1">Riwayat</div>
+      <button class="btn btn-sec" onclick="clearAll()" style="font-size:.7rem;padding:8px 13px;">🗑 Hapus</button>
+    </div>
+    <div class="mlist" id="mlist"></div>
+    <div id="hempty" class="empty"><div class="eico">📋</div>Belum ada pertandingan selesai.</div>
+  </div>
+
+  <!-- ═ IURAN ═ -->
+  <div class="panel" id="tab-iuran">
+    <div class="fee-config">
+      <div class="fee-title">⚙ Pengaturan Tarif</div>
+      <div class="fee-fields">
+        <div class="fee-field">
+          <div class="fee-lbl">Iuran Kedatangan (Rp)</div>
+          <input class="fee-inp" id="feeBase" type="number" inputmode="numeric" min="0" step="1000" value="10000">
+        </div>
+        <div class="fee-field">
+          <div class="fee-lbl">Tambahan per Pertandingan (Rp)</div>
+          <input class="fee-inp" id="feePerMatch" type="number" inputmode="numeric" min="0" step="1000" value="5000">
+        </div>
+        <button class="btn btn-g" onclick="saveFee()" style="width:100%;padding:12px;">🔄 Terapkan Tarif</button>
+      </div>
+      <div class="fee-note">
+        💡 <b>Rumus:</b> Kedatangan + (Jumlah Main × per Match)<br>
+        Contoh: hadir + 3× main → Rp10.000 + (3×Rp5.000) = <b>Rp25.000</b><br>
+        Gunakan <b>±</b> untuk penyesuaian diskon/denda khusus (per Rp1.000).
+      </div>
+    </div>
+    <div class="iuran-sum" id="iuranSum"></div>
+    <div class="stitle">Detail Iuran</div>
+    <div class="iuran-list" id="iuranList"></div>
+    <div id="iuranEmpty" class="empty" style="display:none">
+      <div class="eico">💰</div>Belum ada pemain.
+    </div>
+    <div id="iuranTotalCard" style="display:none"></div>
+  </div>
+
+</div><!-- end .page -->
+
+<!-- ═ BOTTOM NAV ═ -->
+<nav class="tabs">
+  <button class="tab active" onclick="go('players')" id="tnav-players">
+    <span class="ico">👥</span>Pemain
+  </button>
+  <button class="tab" onclick="go('courts')" id="tnav-courts">
+    <span class="ico">🏟️</span>Lapangan
+  </button>
+  <button class="tab" onclick="go('standing')" id="tnav-standing">
+    <span class="ico">🏆</span>Klasemen
+  </button>
+  <button class="tab" onclick="go('history')" id="tnav-history">
+    <span class="ico">📋</span>Riwayat
+  </button>
+  <button class="tab" onclick="go('iuran')" id="tnav-iuran">
+    <span class="ico">💰</span>Iuran
+  </button>
+</nav>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+var players = JSON.parse(localStorage.getItem('bmd_p')    || '[]');
+var matches  = JSON.parse(localStorage.getItem('bmd_m')    || '[]');
+var courts   = JSON.parse(localStorage.getItem('bmd_c')    || 'null') || [
+  {id:1,on:false,a1:'',a2:'',b1:'',b2:'',sA:0,sB:0},
+  {id:2,on:false,a1:'',a2:'',b1:'',b2:'',sA:0,sB:0},
+  {id:3,on:false,a1:'',a2:'',b1:'',b2:'',sA:0,sB:0},
+];
+var feeBase    = parseInt(localStorage.getItem('bmd_fb') || '10000');
+var feePerGame = parseInt(localStorage.getItem('bmd_fg') || '5000');
+var paidMap    = JSON.parse(localStorage.getItem('bmd_paid') || '{}');
+var adjMap     = JSON.parse(localStorage.getItem('bmd_adj')  || '{}');
+
+var CN = ['Lapangan 1','Lapangan 2','Lapangan 3'];
+var CC = ['var(--c1)','var(--c2)','var(--c3)'];
+
+function save() {
+  localStorage.setItem('bmd_p',    JSON.stringify(players));
+  localStorage.setItem('bmd_m',    JSON.stringify(matches));
+  localStorage.setItem('bmd_c',    JSON.stringify(courts));
+  localStorage.setItem('bmd_paid', JSON.stringify(paidMap));
+  localStorage.setItem('bmd_adj',  JSON.stringify(adjMap));
+}
+function saveFeeStore() {
+  localStorage.setItem('bmd_fb', feeBase);
+  localStorage.setItem('bmd_fg', feePerGame);
+}
+function xe(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+function rp(n) {
+  return 'Rp' + Math.abs(n).toLocaleString('id-ID');
+}
+function toast(msg, col) {
+  col = col || 'var(--grn)';
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = col;
+  el.style.color = (col === 'var(--grn)') ? '#000' : '#fff';
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 2400);
+}
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+var TABS = ['players','courts','standing','history','iuran'];
+function go(name) {
+  TABS.forEach(function(t) {
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    document.getElementById('tnav-' + t).classList.toggle('active', t === name);
+  });
+  if (name === 'players')  renderP();
+  if (name === 'courts')   renderC();
+  if (name === 'standing') renderST();
+  if (name === 'history')  renderH();
+  if (name === 'iuran')    renderIuran();
+}
+
+// ══════════════════════════════════════════
+// PLAYERS
+// ══════════════════════════════════════════
+function addP() {
+  var inp = document.getElementById('nameIn');
+  var n = inp.value.trim();
+  if (!n) return;
+  if (players.some(function(p){ return p.toLowerCase() === n.toLowerCase(); })) {
+    toast('⚠ Nama sudah ada!', '#f0a030'); return;
+  }
+  players.push(n); save(); inp.value = '';
+  renderP(); toast('✓ Pemain ditambahkan');
+}
+function delP(i) {
+  if (!confirm('Hapus "' + players[i] + '"?')) return;
+  players.splice(i, 1); save(); renderP();
+}
+function renderP() {
+  var g = document.getElementById('pgrid');
+  var e = document.getElementById('pempty');
+  document.getElementById('pcnt').textContent = players.length;
+  if (!players.length) { g.innerHTML = ''; e.style.display = 'block'; return; }
+  e.style.display = 'none';
+  g.innerHTML = players.map(function(p, i) {
+    return '<div class="pchip">'
+      + '<span class="pnum">' + String(i+1).padStart(2,'0') + '</span>'
+      + '<span class="pname">' + xe(p) + '</span>'
+      + '<button class="btn-del" onclick="delP(' + i + ')">✕</button>'
+      + '</div>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// COURTS
+// ══════════════════════════════════════════
+function busySet(exc) {
+  var s = new Set();
+  courts.forEach(function(c, j) {
+    if (j !== exc && c.on) [c.a1,c.a2,c.b1,c.b2].forEach(function(p){ if(p) s.add(p); });
+  });
+  return s;
+}
+
+function renderC() {
+  renderSum('sumA');
+  document.getElementById('cgrid').innerHTML =
+    courts.map(function(c, i){ return buildC(c, i); }).join('');
+}
+
+function buildC(c, i) {
+  var col = CC[i];
+  if (!c.on) {
+    var bz = busySet(i);
+    function makeOpts(selVal) {
+      return players.map(function(p) {
+        var dis = bz.has(p) ? ' disabled' : '';
+        var sel = (p === selVal) ? ' selected' : '';
+        var lbl = xe(p) + (bz.has(p) ? ' (bermain)' : '');
+        return '<option value="' + xe(p) + '"' + dis + sel + ' style="' + (bz.has(p)?'color:#4e6e58':'') + '">' + lbl + '</option>';
+      }).join('');
+    }
+    function mkSel(key) {
+      return '<select class="psel" id="' + key + '-' + i + '" onchange="csave(' + i + ')">'
+        + '<option value="">-- Pilih pemain --</option>'
+        + makeOpts(c[key])
+        + '</select>';
+    }
+    return '<div class="ccard">'
+      + '<div class="cheader">'
+        + '<div class="cdot" style="background:' + col + '"></div>'
+        + '<span class="ctitle" style="color:' + col + '">' + CN[i] + '</span>'
+        + '<span class="cstatus idle">Kosong</span>'
+      + '</div>'
+      + '<div class="cbody">'
+        + '<div class="tblock">'
+          + '<div class="tbhead"><span class="ttag ta">Tim A</span></div>'
+          + '<div class="tsels">' + mkSel('a1') + mkSel('a2') + '</div>'
+        + '</div>'
+        + '<div class="vsline">VS</div>'
+        + '<div class="tblock">'
+          + '<div class="tbhead"><span class="ttag tb">Tim B</span></div>'
+          + '<div class="tsels">' + mkSel('b1') + mkSel('b2') + '</div>'
+        + '</div>'
+        + '<div class="mact">'
+          + '<button class="bcrt bstart" onclick="startM(' + i + ')">▶ Mulai</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }
+
+  // ── PLAYING STATE ──
+  return '<div class="ccard">'
+    + '<div class="cheader">'
+      + '<div class="cdot" style="background:' + col + '"></div>'
+      + '<span class="ctitle" style="color:' + col + '">' + CN[i] + '</span>'
+      + '<span class="cstatus playing">● Bermain</span>'
+    + '</div>'
+    + '<div class="cbody">'
+      + '<div class="sdisplay">'
+        // team names
+        + '<div class="steam-row">'
+          + '<div class="snames">'
+            + '<div class="slbl2">Tim A</div>'
+            + '<div class="spname" style="color:' + col + '">' + xe(c.a1) + '</div>'
+            + '<div class="spname" style="color:' + col + '">' + xe(c.a2) + '</div>'
+          + '</div>'
+          + '<div></div>'
+          + '<div class="snames r">'
+            + '<div class="slbl2">Tim B</div>'
+            + '<div class="spname">' + xe(c.b1) + '</div>'
+            + '<div class="spname">' + xe(c.b2) + '</div>'
+          + '</div>'
+        + '</div>'
+        // score inputs
+        + '<div class="score-area">'
+          + '<div class="score-col">'
+            + '<div class="score-label">Skor A</div>'
+            + '<input class="score-input clr-a" id="inA-' + i + '" type="number" inputmode="numeric" min="0" max="99" value="' + c.sA + '" oninput="onScoreInput(' + i + ',\'A\')">'
+            + '<div class="score-btns">'
+              + '<button class="sbtn" onclick="chSc(' + i + ',\'A\',-1)">−</button>'
+              + '<button class="sbtn plus" onclick="chSc(' + i + ',\'A\',1)">+</button>'
+            + '</div>'
+          + '</div>'
+          + '<div class="score-sep">:</div>'
+          + '<div class="score-col">'
+            + '<div class="score-label">Skor B</div>'
+            + '<input class="score-input clr-b" id="inB-' + i + '" type="number" inputmode="numeric" min="0" max="99" value="' + c.sB + '" oninput="onScoreInput(' + i + ',\'B\')">'
+            + '<div class="score-btns">'
+              + '<button class="sbtn" onclick="chSc(' + i + ',\'B\',-1)">−</button>'
+              + '<button class="sbtn plus" onclick="chSc(' + i + ',\'B\',1)">+</button>'
+            + '</div>'
+          + '</div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="mact" style="margin-top:12px;">'
+        + '<button class="bcrt bfin" onclick="finM(' + i + ')">✓ Selesai</button>'
+        + '<button class="bcrt bcanc" onclick="cancM(' + i + ')">✕ Batal</button>'
+      + '</div>'
+    + '</div>'
+  + '</div>';
+}
+
+function csave(i) {
+  ['a1','a2','b1','b2'].forEach(function(k) {
+    var el = document.getElementById(k + '-' + i);
+    if (el) courts[i][k] = el.value;
+  });
+  save();
+}
+
+// score input from typing
+function onScoreInput(i, team) {
+  var el = document.getElementById('in' + team + '-' + i);
+  var val = parseInt(el.value);
+  if (isNaN(val) || val < 0) val = 0;
+  if (val > 99) val = 99;
+  if (team === 'A') courts[i].sA = val;
+  else              courts[i].sB = val;
+  save();
+}
+
+// score change from +/- buttons
+function chSc(i, team, d) {
+  var el = document.getElementById('in' + team + '-' + i);
+  var cur = team === 'A' ? courts[i].sA : courts[i].sB;
+  var nv = Math.max(0, Math.min(99, cur + d));
+  if (team === 'A') courts[i].sA = nv;
+  else              courts[i].sB = nv;
+  if (el) el.value = nv;
+  save();
+}
+
+function startM(i) {
+  csave(i);
+  var c = courts[i];
+  var sel = [c.a1, c.a2, c.b1, c.b2];
+  if (sel.some(function(p){ return !p; })) {
+    toast('⚠ Pilih 4 pemain (Tim A & Tim B)!', '#f0a030'); return;
+  }
+  if (new Set(sel).size < 4) {
+    toast('⚠ Pemain tidak boleh sama!', '#f0a030'); return;
+  }
+  var bz = busySet(i);
+  var cf = sel.find(function(p){ return bz.has(p); });
+  if (cf) { toast('⚠ ' + cf + ' sedang di lapangan lain!', '#f0a030'); return; }
+  courts[i] = { id: i+1, on: true, a1: c.a1, a2: c.a2, b1: c.b1, b2: c.b2, sA: 0, sB: 0 };
+  save(); renderC();
+}
+
+function finM(i) {
+  var c = courts[i];
+  // read current input values
+  var eA = document.getElementById('inA-' + i);
+  var eB = document.getElementById('inB-' + i);
+  if (eA) c.sA = Math.max(0, parseInt(eA.value) || 0);
+  if (eB) c.sB = Math.max(0, parseInt(eB.value) || 0);
+
+  matches.unshift({
+    id: Date.now(), court: i+1,
+    a1: c.a1, a2: c.a2, b1: c.b1, b2: c.b2,
+    sA: c.sA, sB: c.sB,
+    time: new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})
+  });
+  courts[i] = { id: i+1, on: false, a1:'', a2:'', b1:'', b2:'', sA:0, sB:0 };
+  save(); renderC();
+  var w = c.sA > c.sB ? 'Tim A menang'
+        : c.sB > c.sA ? 'Tim B menang'
+        : 'Seri';
+  toast('✓ ' + c.sA + ':' + c.sB + ' — ' + w);
+}
+
+function cancM(i) {
+  if (!confirm('Batalkan pertandingan ini?')) return;
+  courts[i] = { id: i+1, on: false, a1:'', a2:'', b1:'', b2:'', sA:0, sB:0 };
+  save(); renderC();
+}
+
+// ══════════════════════════════════════════
+// STANDING
+// ══════════════════════════════════════════
+function getStats() {
+  var s = {};
+  function ens(p) { if (!s[p]) s[p] = {w:0,d:0,l:0,pf:0,pa:0,pts:0}; }
+  players.forEach(ens);
+  matches.forEach(function(m) {
+    [m.a1,m.a2,m.b1,m.b2].forEach(ens);
+    var A = m.sA, B = m.sB;
+    [m.a1,m.a2].forEach(function(p){ s[p].pf += A; s[p].pa += B; });
+    [m.b1,m.b2].forEach(function(p){ s[p].pf += B; s[p].pa += A; });
+    if (A > B) {
+      [m.a1,m.a2].forEach(function(p){ s[p].w++; s[p].pts += 3; });
+      [m.b1,m.b2].forEach(function(p){ s[p].l++; });
+    } else if (B > A) {
+      [m.b1,m.b2].forEach(function(p){ s[p].w++; s[p].pts += 3; });
+      [m.a1,m.a2].forEach(function(p){ s[p].l++; });
+    } else {
+      [m.a1,m.a2,m.b1,m.b2].forEach(function(p){ s[p].d++; s[p].pts++; });
+    }
+  });
+  return s;
+}
+
+function renderST() {
+  renderSum('sumB');
+  var stats = getStats();
+  var rows = Object.keys(stats).map(function(name) {
+    var s = stats[name];
+    return { name:name, w:s.w, d:s.d, l:s.l, pf:s.pf, pa:s.pa, pts:s.pts,
+             played:s.w+s.d+s.l, diff:s.pf-s.pa };
+  }).sort(function(a,b){ return b.pts-a.pts || b.diff-a.diff || b.pf-a.pf; });
+
+  var body  = document.getElementById('stbody');
+  var empty = document.getElementById('stempty');
+  if (!rows.length) { body.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  body.innerHTML = rows.map(function(r, i) {
+    var rk = i+1;
+    var cr = rk===1?'👑':rk===2?'🥈':rk===3?'🥉':'';
+    var dc = r.diff>0?'dp':r.diff<0?'dn':'dz';
+    var ds = r.diff>0?'+'+r.diff:String(r.diff);
+    var pct = r.played > 0 ? Math.round(r.w/r.played*100) : 0;
+    return '<tr class="' + (rk<=3?'r'+rk:'') + '">'
+      + '<td class="rnum">' + rk + '</td>'
+      + '<td><div class="ncell">' + (cr?'<span>'+cr+'</span>':'')
+        + '<div><div>' + xe(r.name) + '</div>'
+        + '<div class="pbar"><div class="pfill" style="width:' + pct + '%"></div></div>'
+        + '</div></div></td>'
+      + '<td>' + r.played + '</td>'
+      + '<td class="sw">' + r.w + '</td>'
+      + '<td class="sd">' + r.d + '</td>'
+      + '<td class="sl">' + r.l + '</td>'
+      + '<td style="color:var(--gdim)">' + r.pf + '</td>'
+      + '<td style="color:var(--red);opacity:.7">' + r.pa + '</td>'
+      + '<td class="sdiff ' + dc + '">' + ds + '</td>'
+      + '<td class="sp">' + r.pts + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// HISTORY
+// ══════════════════════════════════════════
+function renderH() {
+  var list  = document.getElementById('mlist');
+  var empty = document.getElementById('hempty');
+  if (!matches.length) { list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  list.innerHTML = matches.map(function(m, i) {
+    var wA=m.sA>m.sB, wB=m.sB>m.sA;
+    var badge = wA ? '<span class="wbadge">🏆 Tim A Menang</span>'
+              : wB ? '<span class="wbadge">🏆 Tim B Menang</span>'
+              :      '<span class="dbadge">🤝 Seri</span>';
+    return '<div class="mitem">'
+      + '<div class="mtop">'
+        + '<span class="midx">' + String(matches.length-i).padStart(2,'0') + '</span>'
+        + '<span class="mctag t' + m.court + '">L' + m.court + '</span>'
+        + '<span class="mtime">' + (m.time||'') + '</span>'
+        + '<button class="mdel" onclick="delM(' + i + ')">🗑</button>'
+      + '</div>'
+      + '<div class="mbody">'
+        + '<div class="mteam">'
+          + '<div class="mplayer" style="' + (wA?'color:var(--grn)':'') + '">' + xe(m.a1) + '</div>'
+          + '<div class="mplayer" style="' + (wA?'color:var(--grn)':'') + '">' + xe(m.a2) + '</div>'
+          + '<div style="margin-top:4px"><span class="ttag ta" style="font-size:.54rem">Tim A</span></div>'
+        + '</div>'
+        + '<div class="mscore">'
+          + '<span style="color:' + (wA?'var(--grn)':'var(--txt)') + '">' + m.sA + '</span>'
+          + '<span style="color:var(--mut);font-size:.8rem">:</span>'
+          + '<span style="color:' + (wB?'var(--grn)':'var(--txt)') + '">' + m.sB + '</span>'
+        + '</div>'
+        + '<div class="mteam r">'
+          + '<div class="mplayer" style="' + (wB?'color:var(--grn)':'') + '">' + xe(m.b1) + '</div>'
+          + '<div class="mplayer" style="' + (wB?'color:var(--grn)':'') + '">' + xe(m.b2) + '</div>'
+          + '<div style="margin-top:4px;text-align:right"><span class="ttag tb" style="font-size:.54rem">Tim B</span></div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="mresult">' + badge + '</div>'
+    + '</div>';
+  }).join('');
+}
+function delM(i) {
+  if (!confirm('Hapus pertandingan ini?')) return;
+  matches.splice(i,1); save(); renderH();
+}
+function clearAll() {
+  if (!confirm('Hapus SEMUA riwayat?')) return;
+  matches=[]; save(); renderH(); toast('🗑 Dihapus','#ff4a4a');
+}
+
+// ══════════════════════════════════════════
+// SUMMARY
+// ══════════════════════════════════════════
+function renderSum(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var ac = courts.filter(function(c){ return c.on; }).length;
+  var tp = matches.reduce(function(a,m){ return a+m.sA+m.sB; }, 0);
+  el.innerHTML =
+    mkCard('Total Pemain', players.length, 'terdaftar', 'var(--grn)')
+  + mkCard('Pertandingan', matches.length, 'selesai', 'var(--grn)')
+  + mkCard('Lapangan Aktif', ac + '/3', 'bermain', ac?'var(--grn)':'var(--mut)')
+  + mkCard('Total Poin', tp, 'semua match', 'var(--grn)');
+}
+function mkCard(lbl, val, sub, col) {
+  return '<div class="scard">'
+    + '<div class="slabel">' + lbl + '</div>'
+    + '<div class="sval" style="color:' + col + '">' + val + '</div>'
+    + '<div class="ssub">' + sub + '</div>'
+  + '</div>';
+}
+
+// ══════════════════════════════════════════
+// IURAN
+// ══════════════════════════════════════════
+function saveFee() {
+  feeBase    = parseInt(document.getElementById('feeBase').value)    || 0;
+  feePerGame = parseInt(document.getElementById('feePerMatch').value) || 0;
+  saveFeeStore(); renderIuran(); toast('✓ Tarif diperbarui');
+}
+function countGames(name) {
+  return matches.filter(function(m){
+    return m.a1===name||m.a2===name||m.b1===name||m.b2===name;
+  }).length;
+}
+function togglePaid(i) {
+  var name = players[i];
+  paidMap[name] = !paidMap[name];
+  save(); renderIuran();
+}
+function changeAdj(i, delta) {
+  var name = players[i];
+  adjMap[name] = (adjMap[name]||0) + delta*1000;
+  save(); renderIuran();
+}
+
+function renderIuran() {
+  document.getElementById('feeBase').value    = feeBase;
+  document.getElementById('feePerMatch').value = feePerGame;
+
+  var list  = document.getElementById('iuranList');
+  var empty = document.getElementById('iuranEmpty');
+  var tcEl  = document.getElementById('iuranTotalCard');
+
+  if (!players.length) {
+    list.innerHTML=''; empty.style.display='block'; tcEl.style.display='none';
+    renderIuranSum(0,0,0); return;
+  }
+  empty.style.display='none';
+
+  var grandTotal=0, totalPaid=0, totalUnpaid=0;
+
+  list.innerHTML = players.map(function(name, i) {
+    var games = countGames(name);
+    var adj   = adjMap[name] || 0;
+    var total = Math.max(0, feeBase + games*feePerGame + adj);
+    var paid  = !!paidMap[name];
+    grandTotal += total;
+    if (paid) totalPaid+=total; else totalUnpaid+=total;
+
+    var adjColor = adj>0?'var(--grn)':adj<0?'var(--red)':'var(--mut)';
+    var adjTxt   = adj===0 ? '±0' : (adj>0 ? '+'+rp(adj) : '−'+rp(Math.abs(adj)));
+
+    return '<div class="iuran-card' + (paid?' paid-card':'') + '">'
+      // top row: number + name + status toggle
+      + '<div class="icard-top">'
+        + '<span class="icard-num">' + String(i+1).padStart(2,'0') + '</span>'
+        + '<span class="icard-name">' + xe(name) + '</span>'
+        + '<div class="icard-status' + (paid?' paid':'') + '" onclick="togglePaid(' + i + ')">'
+          + '<div class="icard-chk' + (paid?' on':'') + '">' + (paid?'✓':'') + '</div>'
+          + '<span class="icard-slbl' + (paid?' paid':' unpaid') + '">' + (paid?'Lunas':'Belum') + '</span>'
+        + '</div>'
+      + '</div>'
+      // body: detail + total
+      + '<div class="icard-body">'
+        + '<div class="icard-detail">'
+          + '<div class="icard-rincian">'
+            + '🏠 ' + rp(feeBase) + ' (kedatangan)<br>'
+            + '🏸 ' + games + '× main × ' + rp(feePerGame) + '<br>'
+            + (adj!==0 ? '⚙ Penyesuaian: <span style="color:'+adjColor+'">'+adjTxt+'</span>' : '')
+          + '</div>'
+        + '</div>'
+        + '<div class="icard-total' + (paid?' paid':' unpaid') + '">' + rp(total) + '</div>'
+      + '</div>'
+      // adjustment row
+      + '<div class="icard-adj">'
+        + '<span class="adj-lbl">Penyesuaian</span>'
+        + '<div class="adj-controls">'
+          + '<button class="adj-btn" onclick="changeAdj(' + i + ',-1)">−</button>'
+          + '<span class="adj-val" style="color:' + adjColor + '">' + adjTxt + '</span>'
+          + '<button class="adj-btn" onclick="changeAdj(' + i + ',1)">+</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+
+  // total card
+  var lunas = players.filter(function(p){ return paidMap[p]; }).length;
+  tcEl.style.display = 'block';
+  tcEl.innerHTML = '<div class="iuran-total-card">'
+    + '<div><div class="itotal-label">Total Keseluruhan</div>'
+      + '<div style="font-size:.65rem;color:var(--mut);margin-top:2px">' + lunas + '/' + players.length + ' pemain lunas</div>'
+    + '</div>'
+    + '<div><div class="itotal-val">' + rp(grandTotal) + '</div></div>'
+  + '</div>';
+
+  renderIuranSum(grandTotal, totalPaid, totalUnpaid);
+}
+
+function renderIuranSum(grand, paid, unpaid) {
+  var el = document.getElementById('iuranSum');
+  if (!el) return;
+  var lunas = players.filter(function(p){ return paidMap[p]; }).length;
+  el.innerHTML =
+    mkCard('Total Iuran', rp(grand), 'semua pemain', 'var(--grn)')
+  + mkCard('Lunas', rp(paid), lunas+' pemain', 'var(--grn)')
+  + mkCard('Belum Bayar', rp(unpaid), (players.length-lunas)+' pemain', 'var(--ylw)')
+  + mkCard('Per Match', rp(feePerGame), '+ '+rp(feeBase)+' hadir', 'var(--blu)');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+(function(){
+  var d = new Date();
+  document.getElementById('hdate').innerHTML =
+    d.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'})
+    + '<br>' + d.toLocaleDateString('id-ID', {year:'numeric'});
+  renderP();
+  renderC();
+})();
+</script>
+</body>
+</html>
