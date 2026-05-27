@@ -30,7 +30,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
     repeating-linear-gradient(90deg,transparent,transparent 31px,#fff 31px,#fff 32px);}
 
 /* ── LAYOUT ── */
-.page{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 14px 24px;}
+.page{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 14px calc(var(--tab-h) + 24px + env(safe-area-inset-bottom));}
 
 /* ── HEADER ── */
 header{
