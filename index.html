@@ -404,7 +404,6 @@ td:not(:first-child):not(:nth-child(2)){text-align:center;}
       <div class="sort-pills" id="sortPills">
         <button class="sort-pill active" onclick="setSort('pts')">Nilai</button>
         <button class="sort-pill" onclick="setSort('avg')">Avg Pts</button>
-        <button class="sort-pill" onclick="setSort('wr')">Win Rate</button>
       </div>
     </div>
     <div class="swrap">
@@ -413,7 +412,7 @@ td:not(:first-child):not(:nth-child(2)){text-align:center;}
           <th>#</th><th>Pemain</th><th>Main</th>
           <th>M</th><th>S</th><th>K</th>
           <th>P+</th><th>P−</th><th>Selisih</th><th>Nilai</th>
-          <th>Avg Pts</th><th>WR%</th>
+          <th>Avg Pts</th>
         </tr></thead>
         <tbody id="stbody"></tbody>
       </table>
@@ -773,7 +772,7 @@ var currentSort = 'pts';
 function setSort(key) {
   currentSort = key;
   document.querySelectorAll('.sort-pill').forEach(function(el) {
-    el.classList.toggle('active', el.textContent.trim() === (key==='pts'?'Nilai':key==='avg'?'Avg Pts':'Win Rate'));
+    el.classList.toggle('active', el.textContent.trim() === (key==='pts'?'Nilai':key==='avg'?'Avg Pts'));
   });
   renderST();
 }
@@ -807,15 +806,13 @@ function renderST() {
     var s = stats[name];
     var played = s.w + s.d + s.l;
     var avg = played > 0 ? s.pts / played : 0;
-    var wr  = played > 0 ? s.w / played * 100 : 0;
     return { name:name, w:s.w, d:s.d, l:s.l, pf:s.pf, pa:s.pa, pts:s.pts,
-             played:played, diff:s.pf-s.pa, avg:avg, wr:wr };
+             played:played, diff:s.pf-s.pa, avg:avg};
   });
  
   // sort by selected key, with tiebreakers
   rows.sort(function(a, b) {
     if (currentSort === 'avg') return b.avg - a.avg || b.pts - a.pts || b.diff - a.diff;
-    if (currentSort === 'wr')  return b.wr  - a.wr  || b.pts - a.pts || b.diff - a.diff;
     return b.pts - a.pts || b.diff - a.diff || b.pf - a.pf; // default: nilai
   });
  
@@ -839,12 +836,10 @@ function renderST() {
     var ds = r.diff>0?'+'+r.diff:String(r.diff);
     var pct = r.played > 0 ? Math.round(r.wr) : 0;
     var avgStr = r.avg.toFixed(2);
-    var wrStr  = r.wr.toFixed(1) + '%';
  
     // highlight active sort column value
     var ptsStyle  = currentSort==='pts' ? 'color:var(--grn);font-weight:700;' : '';
     var avgStyle  = currentSort==='avg' ? 'color:var(--grn);font-weight:700;' : 'color:var(--blu);';
-    var wrStyle   = currentSort==='wr'  ? 'color:var(--grn);font-weight:700;' : 'color:var(--ylw);';
  
     return '<tr class="' + (rk<=3?'r'+rk:'') + '">'
       + '<td class="rnum">' + rk + '</td>'
