@@ -119,11 +119,11 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;line-
 
 /* ── SUMMARY CARDS ── */
 .srow{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px;}
-@media(min-width:400px){.srow{grid-template-columns:repeat(4,1fr);}}
-.scard{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:12px 13px;}
-.slabel{font-size:.58rem;letter-spacing:2.5px;color:var(--mut);text-transform:uppercase;margin-bottom:4px;}
-.sval{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--grn);line-height:1;}
-.ssub{font-size:.65rem;color:var(--mut);margin-top:2px;}
+.srow.cols3{grid-template-columns:repeat(3,1fr);}
+.scard{background:var(--surf);border:1.5px solid var(--bdr);border-radius:12px;padding:10px 11px;min-width:0;}
+.slabel{font-size:.55rem;letter-spacing:2px;color:var(--mut);text-transform:uppercase;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sval{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--grn);line-height:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ssub{font-size:.6rem;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 /* ── COURT CARDS ── */
 .cgrid{display:flex;flex-direction:column;gap:14px;}
@@ -219,14 +219,9 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;line-
 }
 .sort-pill.active{background:var(--grn);border-color:var(--grn);color:#000;}
 .sort-pill:active{transform:scale(.95);}
-  
+
 /* ── STANDING TABLE ── */
-#tab-standing {
-  background: var(--surf);
-  border-radius: var(--radius);
-  padding: 14px;
-  border: 1.5px solid var(--bdr);
-}
+#tab-standing{background:var(--surf);border-radius:var(--radius);padding:14px;border:1.5px solid var(--bdr);}
 .swrap{overflow-x:auto;border-radius:12px;border:1.5px solid var(--bdr);-webkit-overflow-scrolling:touch;}
 table{width:100%;border-collapse:collapse;min-width:520px;}
 thead th{
@@ -287,7 +282,6 @@ td:not(:first-child):not(:nth-child(2)){text-align:center;}
 .fee-note b{color:var(--txt);}
 
 .iuran-sum{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px;}
-@media(min-width:400px){.iuran-sum{grid-template-columns:repeat(4,1fr);}}
 
 /* iuran cards (mobile-friendly list instead of table) */
 .iuran-list{display:flex;flex-direction:column;gap:9px;}
@@ -369,8 +363,8 @@ td:not(:first-child):not(:nth-child(2)){text-align:center;}
     <div class="logo">
       <div class="logo-icon">🏸</div>
       <div class="logo-text">
-        <div class="logo-sub">The Droop Sport Club</div>
-        <h1>Score Table<span class="badge">copyright</span></h1>
+        <div class="logo-sub">Sistem Pertandingan</div>
+        <h1>BADMINTON<span class="badge">GANDA</span></h1>
       </div>
     </div>
     <div class="hdate" id="hdate"></div>
@@ -397,7 +391,7 @@ td:not(:first-child):not(:nth-child(2)){text-align:center;}
   </div>
 
   <!-- ═ KLASEMEN ═ -->
-   <div class="panel" id="tab-standing">
+  <div class="panel" id="tab-standing">
     <div class="srow" id="sumB"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
       <div class="stitle" style="margin:0;flex:1;">Klasemen Pemain</div>
@@ -769,7 +763,7 @@ function cancM(i) {
 // STANDING
 // ══════════════════════════════════════════
 var currentSort = 'pts';
- 
+
 function setSort(key) {
   currentSort = key;
   document.querySelectorAll('.sort-pill').forEach(function(el) {
@@ -777,7 +771,7 @@ function setSort(key) {
   });
   renderST();
 }
- 
+
 function getStats() {
   var s = {};
   function ens(p) { if (!s[p]) s[p] = {w:0,d:0,l:0,pf:0,pa:0,pts:0}; }
@@ -799,7 +793,7 @@ function getStats() {
   });
   return s;
 }
- 
+
 function renderST() {
   renderSum('sumB');
   var stats = getStats();
@@ -811,19 +805,19 @@ function renderST() {
     return { name:name, w:s.w, d:s.d, l:s.l, pf:s.pf, pa:s.pa, pts:s.pts,
              played:played, diff:s.pf-s.pa, avg:avg, wr:wr };
   });
- 
+
   // sort by selected key, with tiebreakers
   rows.sort(function(a, b) {
     if (currentSort === 'avg') return b.avg - a.avg || b.pts - a.pts || b.diff - a.diff;
     if (currentSort === 'wr')  return b.wr  - a.wr  || b.pts - a.pts || b.diff - a.diff;
     return b.pts - a.pts || b.diff - a.diff || b.pf - a.pf; // default: nilai
   });
- 
+
   var body  = document.getElementById('stbody');
   var empty = document.getElementById('stempty');
   if (!rows.length) { body.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display = 'none';
- 
+
   // highlight column header based on sort
   document.querySelectorAll('#tab-standing thead th').forEach(function(th, i) {
     th.style.color = '';
@@ -831,7 +825,7 @@ function renderST() {
   var hlIdx = currentSort==='pts' ? 9 : currentSort==='avg' ? 10 : 11;
   var ths = document.querySelectorAll('#tab-standing thead th');
   if (ths[hlIdx]) ths[hlIdx].style.color = 'var(--grn)';
- 
+
   body.innerHTML = rows.map(function(r, i) {
     var rk = i+1;
     var cr = rk===1?'👑':rk===2?'🥈':rk===3?'🥉':'';
@@ -840,12 +834,12 @@ function renderST() {
     var pct = r.played > 0 ? Math.round(r.wr) : 0;
     var avgStr = r.avg.toFixed(2);
     var wrStr  = r.wr.toFixed(1) + '%';
- 
+
     // highlight active sort column value
     var ptsStyle  = currentSort==='pts' ? 'color:var(--grn);font-weight:700;' : '';
     var avgStyle  = currentSort==='avg' ? 'color:var(--grn);font-weight:700;' : 'color:var(--blu);';
     var wrStyle   = currentSort==='wr'  ? 'color:var(--grn);font-weight:700;' : 'color:var(--ylw);';
- 
+
     return '<tr class="' + (rk<=3?'r'+rk:'') + '">'
       + '<td class="rnum">' + rk + '</td>'
       + '<td><div class="ncell">' + (cr?'<span>'+cr+'</span>':'')
@@ -865,7 +859,6 @@ function renderST() {
       + '</tr>';
   }).join('');
 }
- 
 
 // ══════════════════════════════════════════
 // HISTORY
@@ -925,11 +918,22 @@ function renderSum(id) {
   if (!el) return;
   var ac = courts.filter(function(c){ return c.on; }).length;
   var tp = matches.reduce(function(a,m){ return a+m.sA+m.sB; }, 0);
-  el.innerHTML =
-    mkCard('Total Pemain', players.length, 'terdaftar', 'var(--grn)')
-  + mkCard('Pertandingan', matches.length, 'selesai', 'var(--grn)')
-  + mkCard('Lapangan Aktif', ac + '/3', 'bermain', ac?'var(--grn)':'var(--mut)')
-  + mkCard('Total Poin', tp, 'semua match', 'var(--grn)');
+  if (id === 'sumA') {
+    // Lapangan: 3 kartu saja (tanpa Total Poin)
+    el.className = 'srow cols3';
+    el.innerHTML =
+      mkCard('Total Pemain', players.length, 'terdaftar', 'var(--grn)')
+    + mkCard('Pertandingan', matches.length, 'selesai', 'var(--grn)')
+    + mkCard('Lapangan Aktif', ac + '/3', 'bermain', ac?'var(--grn)':'var(--mut)');
+  } else {
+    // Klasemen: 4 kartu (2x2 grid)
+    el.className = 'srow';
+    el.innerHTML =
+      mkCard('Total Pemain', players.length, 'terdaftar', 'var(--grn)')
+    + mkCard('Pertandingan', matches.length, 'selesai', 'var(--grn)')
+    + mkCard('Lapangan Aktif', ac + '/3', 'bermain', ac?'var(--grn)':'var(--mut)')
+    + mkCard('Total Poin', tp, 'semua match', 'var(--grn)');
+  }
 }
 function mkCard(lbl, val, sub, col) {
   return '<div class="scard">'
